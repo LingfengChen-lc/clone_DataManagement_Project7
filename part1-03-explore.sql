@@ -7,8 +7,8 @@ and product is not null and product_type is not null;
 select patient_age, age_unit from staging_caers_event where age_unit is null and patient_age is not null;
 
 
---3. this query determines if the composite report_id, created_date and product uniquely determine each row
-select report_id, created_date, product, count(*) as cout from staging_caers_event group by report_id, created_date, product 
+--3. this query determines if the composite report_id and product uniquely determine each row
+select report_id, product, count(*) as cout from staging_caers_event group by report_id, product 
 having count(*) > 1 order by report_id limit 5;
 
 
@@ -18,3 +18,6 @@ select product_code, product, description from staging_caers_event where report_
 --5. these two queries first look into groups based on report_id, then select the rows with duplicate report_id
 select report_id, count(*) from staging_caers_event group by report_id limit 5;
 select * from staging_caers_event where report_id = '2018-CFS-006260';
+
+--6. this query check each report_id to see if they have different created_date
+select report_id, count( distinct created_date) from staging_caers_event group by report_id having count(distinct created_date) != 1;
